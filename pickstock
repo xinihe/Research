@@ -1,0 +1,82 @@
+
+import tushare as ts
+import numpy as np
+import pandas as pd
+import datetime as dt
+
+
+def batch_hist_data(stockcode,l):
+    startdate = (dt.datetime.now() - dt.timedelta(days = l)).strftime('%Y-%m-%d')
+    enddate = (dt.datetime.now() - dt.timedelta(days = 2)).strftime('%Y-%m-%d')
+# default ending date is today
+    stockclose = stockma5 = stockma10 = stockma20 = stockvol = stockto = pd.DataFrame()
+
+    for i in stockcode:
+        try:
+            stocktmp = ts.get_hist_data(i, start=startdate, end=enddate)
+            dfclose = pd.DataFrame({i: stocktmp.close})
+            dfma5   = pd.DataFrame({i: stocktmp.ma5})
+            dfma10 = pd.DataFrame({i: stocktmp.ma10})
+            dfma20 = pd.DataFrame({i: stocktmp.ma20})
+            dfvol = pd.DataFrame({i: stocktmp.volume})
+            dfto = pd.DataFrame({i: stocktmp.turnover})
+        except AttributeError:
+            continue
+        stockclose = pd.concat([stockclose, dfclose], axis=1)
+        stockma5 = pd.concat([stockma5, dfma5], axis=1)
+        stockma10 = pd.concat([stockma10, dfma10], axis=1)
+        stockma20 = pd.concat([stockma20, dfma20], axis=1)
+        stockvol = pd.concat([stockvol, dfvol], axis=1)
+        stockto = pd.concat([stockto, dfto], axis=1)
+
+
+    stockclose.to_csv('D:\workfile\Python\learning\data\stkclose.csv')
+    stockma5.to_csv('D:\workfile\Python\learning\data\stkma5.csv')
+    stockma10.to_csv('D:\workfile\Python\learning\data\stkma10.csv')
+    stockma20.to_csv('D:\workfile\Python\learning\data\stkma20.csv')
+    stockvol.to_csv('D:\workfile\Python\learning\data\stkvol.csv')
+    stockto.to_csv('D:\workfile\Python\learning\data\stkto.csv')
+    return
+
+
+
+
+def everyday_update(stockclose,stockvol,stockto):
+    # ts.get_today_all()
+    # the update need to be execute after trading hour
+    df = ts.get_today_all()
+    today = dt.datetime.now().strftime('%Y-%m-%d')
+    appclose = appto = appvol = newclose = newto = newvol = pd.DataFrame()
+    for i in df.code[1:30]:
+        try:
+            dfclose = pd.DataFrame({i: df.loc[df[df.code==i].index[0],'trade']}, index=[today])
+            dfvol = pd.DataFrame({i: df.loc[df[df.code==i].index[0],'volume']}, index=[today])
+            dfto = pd.DataFrame({i: df.loc[df[df.code==i].index[0],'turnoverratio']}, index=[today])
+        except AttributeError:
+            continue
+        if i in stockclose.columns:  # stock already exists
+            appclose = pd.concat([appclose, dfclose], axis=1)
+            appvol = pd.concat([appvol,dfvol], axis=1)
+            appto = pd.concat([appto,dfto], axis=1)
+
+        newclose = pd.concat([newclose, dfclose], axis=1)
+        newvol = pd.concat([newvol, dfvol], axis=1)
+        newto = pd.concat([newto, dfto], axis=1)
+
+    # append existing stocks
+    stockclose = stockclose.append(appclose)
+    stockvol = stockvol.append(appvol)
+    stockto = stockto.append(appto)
+    # add new stocks
+    stockclose = pd.concat([stockclose, newclose], axis=1)
+    stockvol = pd.concat([stockvol, newvol], axis=1)
+    stockto = pd.concat([stockto, newto], axis=1)
+    return
+
+
+if __name__ == '__main__':
+    stockpool = ts.get_stock_basics()
+    stockcode = stockpool.index
+    l = 200
+    batch_hist_data(stockcode, l)
+    
