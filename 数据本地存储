@@ -1,1 +1,5 @@
-1. collect the price history (incl. open, close, high, low, volumn, turnover) of each stock () 
+1. collect the price history (incl. open, close, high, low, volumn, turnover by ts.get_hist_data or ts.get_h_data) of each stock (ts.get_stock_basics()) 
+2. save the data by certain critiora (i.e. close, volumn, turnover etc). Each file contains a spread sheet, each column represents a stock and each row represents a day
+3. on each new trading day, all data file have to be updated by ts.get_today_all(). 
+3.1 if there is any new stock, each file will have extra column with its historical data marked as NaN
+3.2 if there is any stock being delisted, its data thereafter being marked as NaN
