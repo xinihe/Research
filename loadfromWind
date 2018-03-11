@@ -1,0 +1,45 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Mar 12 23:25:00 2018
+
+@author: Ni He
+"""
+
+from WindPy import *
+import pandas as pd
+import datetime as dt
+
+
+def get_LatestAShareInfo(update = 0):
+    symbols = pd.DataFrame()
+    if update == 1:
+        ''' Save the names and codes of all A shares in an AllAShareCode.csv file'''
+        end_date = dt.datetime.today().strftime('%Y-%m-%d')
+        rawdata = w.wset("sectorconstituent","date="+end_date+";sectorid=a001010100000000;field=wind_code,sec_name")
+        symbols['code'] = rawdata.Data[0]
+        symbols['name'] = rawdata.Data[1]
+        symbols.to_csv('E:/Research/Data/Wind/stocks/AllAShareCode.csv')  #change the path/folder as necessary
+    else:
+        file = r'E:/Research/Data/Wind/stocks/AllAShareCode.csv'  #change the path/folder as necessary
+        symbols = pd.read_csv(file, encoding = 'gbk') # if using Chinese, pls try 'gbk','gb2312','gb18030','hz'
+    return symbols        
+
+
+def save_LatestDataintoCsv(symbols, refields = 'open,high,low,close,volume,turn,pe_ttm'):
+    '''Load data into CSV files '''
+    end_date = dt.datetime.today().strftime('%Y-%m-%d')
+    for i in range(0, 10):
+        stkday = w.wsd(symbols['code'][i], "ipo_date", "ED-1D", end_date, "Days=Alldays")
+        start_date = stkday.Data[0][0]  # This command may have problem, try stkday.Data[0][0].strftime('%Y-%m-%d') or dt.strftime(stkday.Data[0][0],'%Y-%m-%d')
+        stk = w.wsd(symbols['code'][i], refields, start_date, end_date, "PriceAdj=F")
+
+        stkinfo = pd.DataFrame(stk.Data,index=stk.Fields,columns=stk.Times)
+        stkinfo = stkinfo.T
+    
+        stkinfo.to_csv(str('E:/Research/Data/Wind/stocks/'+symbols['code'][i]+'.csv'))
+        
+
+if __name__=='__main__':  
+    w.start()
+    symbols = get_LatestAShareInfo()
+    save_LatestDataintoCsv(symbols)
