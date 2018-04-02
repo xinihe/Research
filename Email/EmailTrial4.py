@@ -10,16 +10,16 @@ from email.mime.text import MIMEText
 import os
 import csv
 
-f = open(os.getcwd()+'\\Email\\content.txt','r')
+f = open(os.getcwd()+'\\content.txt','r')
 mailcontent = f.read()
 f.close()
 
-f = open(os.getcwd()+'\\Email\\sub.txt','r')
+f = open(os.getcwd()+'\\content.txt','r')
 mailsub = f.read()
 f.close()
 
 mailto_list = []
-f = csv.reader(open(os.getcwd()+'\\Email\\namelist.csv'))
+f = csv.reader(open(os.getcwd()+'\\namelist.csv'))
 for rows in f:
     mailto_list.append(rows[2])
 mailto_list.pop(0) # 删除行号
@@ -48,7 +48,7 @@ def send_mail(to_list,sub,content):
     except: 
         return False  
 for receiver in mailto_list:                             #发送1封，上面的列表是几个人，这个就填几  
-    if send_mail(receiver,"来自国际 Congratulation","祝你幸福3"):  #邮件主题和邮件内容  
+    if send_mail(receiver,mailsub,mailcontent):  #邮件主题和邮件内容  
             #这是最好写点中文，如果随便写，可能会被网易当做垃圾邮件退信  
         print("done!")  
     else:  
