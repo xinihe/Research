@@ -14,7 +14,7 @@
 
 2. Scholar Google 
 
-   ![ScholarGoogle](Research/Literature/assets/scholargoogle.png)
+![ScholarGoogle](/assets/scholargoogle.png)
 
 如果你有一些代理工具，如Psiphon 3 （赛风）等就可以直接登录，但是免费的一般不大稳定。或者如果你有在海外大学有朋友，同学则可以借用他们的VPN，相当于你在分享他大学的资源。
 
