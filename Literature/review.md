@@ -14,13 +14,13 @@
 
 2. Scholar Google 
 
-![ScholarGoogle](/assets/scholargoogle.png)
+![ScholarGoogle](/Literature/assets/scholargoogle.png)
 
 如果你有一些代理工具，如Psiphon 3 （赛风）等就可以直接登录，但是免费的一般不大稳定。或者如果你有在海外大学有朋友，同学则可以借用他们的VPN，相当于你在分享他大学的资源。
 
 还有一个办法就是Google 镜像地址 http://ac.scmor.com/ 
 
-![Google镜像](Research/Literature/assets/mirrorgoogle.png)
+![Google镜像](/Literature/assets/mirrorgoogle.png)
 
 不需要知道镜像地址，点击左边的==现在访问==就可以访问Scholar Google，点击右边的==现在访问==就可以访问Google。在谷歌学术上面是可以找到很大量的论文原文的。 这个的坏处也是不稳定，不是每一次都好运气能登上去的。
 
